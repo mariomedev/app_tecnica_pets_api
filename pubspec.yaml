@@ -1,6 +1,6 @@
 name: app_tecnica_pets_api
 description: "A new Flutter project."
-publish_to: 'none' 
+publish_to: 'none'
 
 version: 1.0.0+1
 
@@ -12,6 +12,7 @@ dependencies:
   dio: ^5.9.0
   flutter:
     sdk: flutter
+  flutter_launcher_icons: ^0.14.4
   go_router: ^16.2.2
   google_fonts: ^6.3.1
 
@@ -24,4 +25,4 @@ flutter:
 
   uses-material-design: true
   assets:
-     - assets/img/
+    - assets/img/
