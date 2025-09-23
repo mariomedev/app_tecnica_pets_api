@@ -29,7 +29,7 @@ class BreedProvider extends ChangeNotifier {
     final result = await GetBreeds(repository)();
     result.fold(
       ifLeft: (value) {
-        _error = 'Tenemos un error: ${value.message} de tipo ${value.code}';
+        _error = '${value.message} de tipo ${value.code}';
       },
       ifRight: (value) {
         _breeds.clear();
@@ -42,9 +42,23 @@ class BreedProvider extends ChangeNotifier {
   }
 
   Future<void> search(String query) async {
+    if (query.isEmpty || query.length < 2) {
+      loadBreeds();
+      return;
+    }
     _loading = true;
     notifyListeners();
-
+    _breeds.clear();
+    final result = await SearchBreeds(repository)(query);
+    result.fold(
+      ifLeft: (value) {
+        _error = '${value.message} de tipo ${value.code}';
+      },
+      ifRight: (value) {
+        _breeds.addAll(value);
+        _error = null;
+      },
+    );
     _loading = false;
     notifyListeners();
   }

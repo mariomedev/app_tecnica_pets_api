@@ -6,7 +6,7 @@ import 'package:app_tecnica_pets_api/presentation/screens/screens.dart';
 class AppRouter {
   AppRouter._();
   static GoRouter routers = GoRouter(
-    initialLocation: AppRouterConstants.homePath,
+    initialLocation: AppRouterConstants.initialPath,
     routes: [
       GoRoute(
         path: AppRouterConstants.initialPath,

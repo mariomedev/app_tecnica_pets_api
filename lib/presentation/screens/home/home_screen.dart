@@ -15,7 +15,7 @@ class HomeScreen extends StatelessWidget {
         appBar: const TapbarCustomWidget(),
         body: Padding(
           padding: const EdgeInsets.symmetric(
-            horizontal: AppDimensions.kPadding20,
+            horizontal: AppDimensions.kPadding10,
             vertical: AppDimensions.kPadding30,
           ),
           child: TabBarView(

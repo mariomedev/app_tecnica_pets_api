@@ -28,36 +28,44 @@ class CardCustomWidget extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: Colors.black,
-                width: 1,
-              ),
             ),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    breed.name,
-                    style: textStyle.copyWith(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                  Expanded(
+                    child: Text(
+                      breed.name,
+                      style: textStyle.copyWith(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      softWrap: true,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   const SizedBox(height: 4),
-                  Text(
-                    breed.breedGroup ?? 'No group',
-                    style: textStyle.copyWith(
-                      fontSize: 14,
-                      color: Colors.grey[800],
+                  Expanded(
+                    child: Text(
+                      breed.breedGroup ?? 'No group',
+                      style: textStyle.copyWith(
+                        fontSize: 14,
+                        color: Colors.grey[800],
+                      ),
+                      softWrap: true,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  Text(
-                    breed.lifeSpan,
-                    style: textStyle.copyWith(
-                      fontSize: 14,
-                      color: Colors.grey[800],
+                  Expanded(
+                    child: Text(
+                      breed.lifeSpan,
+                      style: textStyle.copyWith(
+                        fontSize: 14,
+                        color: Colors.grey[800],
+                      ),
+                      softWrap: true,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
