@@ -3,7 +3,7 @@ import 'package:app_tecnica_pets_api/core/core.dart';
 import 'package:app_tecnica_pets_api/domain/domain.dart';
 
 class ToggleFavoriteBreed {
-  final BreedRepository repository;
+  final BreedFavoriteRepository repository;
   ToggleFavoriteBreed(this.repository);
 
   Future<Either<ErrorItem, void>> call(Breed breed) async {

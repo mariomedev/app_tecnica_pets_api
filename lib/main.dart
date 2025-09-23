@@ -23,6 +23,15 @@ void main() {
             ),
           ),
         ),
+        ChangeNotifierProvider(
+          create: (context) => BreedFavoriteProvider(
+            repository: BreedFavoriteRepositoryImpl(
+              BreedFavoriteDatasoureApidog(
+                dioClient: context.read<Dio>(),
+              ),
+            ),
+          ),
+        ),
       ],
       child: const MyApp(),
     ),

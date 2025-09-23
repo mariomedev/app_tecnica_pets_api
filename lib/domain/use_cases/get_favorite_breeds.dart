@@ -4,7 +4,7 @@ import 'package:dart_either/dart_either.dart';
 import 'package:app_tecnica_pets_api/domain/domain.dart';
 
 class GetFavoriteBreeds {
-  final BreedRepository repository;
+  final BreedFavoriteRepository repository;
   GetFavoriteBreeds(this.repository);
 
   Future<Either<ErrorItem, List<Breed>>> call() async {
