@@ -4,7 +4,9 @@ import 'package:app_tecnica_pets_api/domain/domain.dart';
 class BreedProvider extends ChangeNotifier {
   final BreedRepository repository;
 
-  BreedProvider({required this.repository});
+  BreedProvider({required this.repository}) {
+    loadBreeds();
+  }
 
   bool _loading = false;
   bool get loading => _loading;
@@ -24,7 +26,17 @@ class BreedProvider extends ChangeNotifier {
   Future<void> loadBreeds() async {
     _loading = true;
     notifyListeners();
-
+    final result = await GetBreeds(repository)();
+    result.fold(
+      ifLeft: (value) {
+        _error = 'Tenemos un error: ${value.message} de tipo ${value.code}';
+      },
+      ifRight: (value) {
+        _breeds.clear();
+        _breeds.addAll(value);
+        _error = null;
+      },
+    );
     _loading = false;
     notifyListeners();
   }

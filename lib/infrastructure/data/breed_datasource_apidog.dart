@@ -1,34 +1,54 @@
 import 'package:dart_either/dart_either.dart';
 import 'package:app_tecnica_pets_api/core/core.dart';
 import 'package:app_tecnica_pets_api/domain/domain.dart';
+import 'package:dio/dio.dart';
 
 class BreedDatasourceApidog implements BreedDatasource {
+  final Dio dioClient;
+
+  BreedDatasourceApidog({required this.dioClient});
+
   @override
-  Future<Either<ErrorItem, Breed>> getBreedDetail(int id) {
+  Future<Either<ErrorItem, dynamic>> getBreeds() async {
+    try {
+      final response = await dioClient.get('v1/breeds?limit=10&page=0');
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data;
+
+        return Either.right(data);
+      } else {
+        return Either.left(
+          ErrorItem(
+            code: '${response.statusCode ?? 500}',
+            message: 'Error en la respuesta del servidor',
+          ),
+        );
+      }
+    } catch (e) {
+      return Either.left(ErrorItem(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<ErrorItem, dynamic>> getBreedDetail(int id) {
     // TODO: implement getBreedDetail
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<ErrorItem, List<Breed>>> getBreeds() {
-    // TODO: implement getBreeds
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<ErrorItem, List<Breed>>> getFavoriteBreeds() {
+  Future<Either<ErrorItem, dynamic>> getFavoriteBreeds() {
     // TODO: implement getFavoriteBreeds
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<ErrorItem, List<Breed>>> searchBreeds(String query) {
+  Future<Either<ErrorItem, dynamic>> searchBreeds(String query) {
     // TODO: implement searchBreeds
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<ErrorItem, void>> toggleFavorite(Breed breed) {
+  Future<Either<ErrorItem, dynamic>> toggleFavorite(Breed breed) {
     // TODO: implement toggleFavorite
     throw UnimplementedError();
   }

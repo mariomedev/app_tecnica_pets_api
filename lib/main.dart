@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -10,10 +11,15 @@ void main() {
   return runApp(
     MultiProvider(
       providers: [
+        Provider<Dio>(
+          create: (_) => DioEnviroment.baseDioClient(),
+        ),
         ChangeNotifierProvider(
           create: (context) => BreedProvider(
             repository: BreedRepositoryImpl(
-              BreedDatasourceApidog(),
+              BreedDatasourceApidog(
+                dioClient: context.read<Dio>(),
+              ),
             ),
           ),
         ),
