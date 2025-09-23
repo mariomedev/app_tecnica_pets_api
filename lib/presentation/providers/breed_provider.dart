@@ -109,7 +109,19 @@ class BreedProvider extends ChangeNotifier {
   Future<void> loadBreedDetail(int id) async {
     _loading = true;
     notifyListeners();
-
+    final result = await GetBreedDetail(repository)(id);
+    await result.fold(
+      ifLeft: (value) {
+        _error = '${value.message} de tipo ${value.code}';
+        _selectedBreed = null;
+      },
+      ifRight: (value) async {
+        final imageUrl = await _fetchImageForBreed(value.id);
+        final updatedBreed = value.copyWith(imageUrl: imageUrl);
+        _selectedBreed = updatedBreed;
+        _error = null;
+      },
+    );
     _loading = false;
     notifyListeners();
   }

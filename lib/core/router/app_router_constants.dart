@@ -3,5 +3,5 @@ class AppRouterConstants {
 
   static const String initialPath = '/';
   static const String homePath = '/home';
-  static const String details = '/details';
+  static const String detailsPath = '/details';
 }

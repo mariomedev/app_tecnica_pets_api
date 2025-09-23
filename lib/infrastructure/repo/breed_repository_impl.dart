@@ -47,9 +47,19 @@ class BreedRepositoryImpl implements BreedRepository {
   }
 
   @override
-  Future<Either<ErrorItem, Breed>> getBreedDetail(int id) {
-    // TODO: implement getBreedDetail
-    throw UnimplementedError();
+  Future<Either<ErrorItem, Breed>> getBreedDetail(int id) async {
+    try {
+      final result = await datasource.getBreedDetail(id);
+      return result.fold(
+        ifLeft: (error) => Either.left(error),
+        ifRight: (data) {
+          final breed = BreedMapper.fromJson(data);
+          return Either.right(breed);
+        },
+      );
+    } catch (e) {
+      return Either.left(ErrorItem(message: e.toString()));
+    }
   }
 
   @override

@@ -3,6 +3,7 @@ import 'package:app_tecnica_pets_api/presentation/providers/providers.dart';
 import 'package:flutter/material.dart';
 
 import 'package:app_tecnica_pets_api/presentation/screens/home/widgets/widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -102,7 +103,12 @@ class _ViewBreedsState extends State<ViewBreeds> {
                 itemCount: provider.breeds.length,
                 itemBuilder: (context, index) {
                   final breed = provider.breeds[index];
-                  return CardCustomWidget(breed: breed);
+                  return GestureDetector(
+                    onTap: () => context.push(
+                      '${AppRouterConstants.detailsPath}/${breed.id}',
+                    ),
+                    child: CardCustomWidget(breed: breed),
+                  );
                 },
               ),
             ),

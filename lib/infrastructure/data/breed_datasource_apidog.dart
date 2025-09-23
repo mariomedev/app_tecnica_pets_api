@@ -52,9 +52,23 @@ class BreedDatasourceApidog implements BreedDatasource {
   }
 
   @override
-  Future<Either<ErrorItem, dynamic>> getBreedDetail(int id) {
-    // TODO: implement getBreedDetail
-    throw UnimplementedError();
+  Future<Either<ErrorItem, dynamic>> getBreedDetail(int id) async {
+    try {
+      final response = await dioClient.get('v1/breeds/$id');
+      if (response.statusCode == 200) {
+        final data = response.data;
+        return Either.right(data);
+      } else {
+        return Either.left(
+          ErrorItem(
+            code: '${response.statusCode ?? 500}',
+            message: 'Error en la respuesta del servidor',
+          ),
+        );
+      }
+    } catch (e) {
+      return Either.left(ErrorItem(message: e.toString()));
+    }
   }
 
   @override
