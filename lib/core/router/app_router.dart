@@ -6,12 +6,18 @@ import 'package:app_tecnica_pets_api/presentation/screens/screens.dart';
 class AppRouter {
   AppRouter._();
   static GoRouter routers = GoRouter(
-    initialLocation: AppRouterConstants.initialPath,
+    initialLocation: AppRouterConstants.homePath,
     routes: [
       GoRoute(
         path: AppRouterConstants.initialPath,
         builder: (context, state) {
           return const SplashScreen();
+        },
+      ),
+      GoRoute(
+        path: AppRouterConstants.homePath,
+        builder: (context, state) {
+          return const HomeScreen();
         },
       ),
     ],
