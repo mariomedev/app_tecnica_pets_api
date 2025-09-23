@@ -23,24 +23,38 @@ class BreedProvider extends ChangeNotifier {
   Breed? _selectedBreed;
   Breed? get selectedBreed => _selectedBreed;
 
-  Future<void> loadBreeds() async {
+  int _currentPage = 0;
+  int get currentPage => _currentPage;
+
+  bool _hasMore = true;
+  bool get hasMore => _hasMore;
+
+  Future<void> loadBreeds({int page = 0, int limit = 10}) async {
+    if (_loading || !_hasMore) return;
+
     _loading = true;
     notifyListeners();
 
-    final result = await GetBreeds(repository)();
+    final result = await GetBreeds(repository).call(page: page, limit: limit);
+
     await result.fold(
       ifLeft: (value) {
         _error = '${value.message} de tipo ${value.code}';
       },
       ifRight: (value) async {
-        final newBreedsList = await Future.wait(
-          value.map((breed) async {
-            final imageUrl = await _fetchImageForBreed(breed.id);
-            return breed.copyWith(imageUrl: imageUrl);
-          }),
-        );
-        _breeds.addAll(newBreedsList);
-        _error = null;
+        if (value.isEmpty) {
+          _hasMore = false;
+        } else {
+          final newBreedsList = await Future.wait(
+            value.map((breed) async {
+              final imageUrl = await _fetchImageForBreed(breed.id);
+              return breed.copyWith(imageUrl: imageUrl);
+            }),
+          );
+          _breeds.addAll(newBreedsList);
+          _currentPage++;
+          _error = null;
+        }
       },
     );
 

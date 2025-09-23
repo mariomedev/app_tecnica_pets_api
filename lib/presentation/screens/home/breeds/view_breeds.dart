@@ -17,11 +17,28 @@ class ViewBreeds extends StatefulWidget {
 class _ViewBreedsState extends State<ViewBreeds> {
   final _controller = TextEditingController();
   final _debouncer = Debouncer(milliseconds: 500);
+  final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200) {
+        context.read<BreedProvider>().loadBreeds(
+          page: context.read<BreedProvider>().currentPage,
+          limit: 10,
+        );
+      }
+    });
+  }
 
   @override
   void dispose() {
     _controller.dispose();
     _debouncer.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -29,7 +46,7 @@ class _ViewBreedsState extends State<ViewBreeds> {
     if (query.isNotEmpty) {
       context.read<BreedProvider>().search(query);
     } else {
-      context.read<BreedProvider>().loadBreeds();
+      context.read<BreedProvider>().loadBreeds(page: 0, limit: 10);
     }
   }
 
@@ -38,6 +55,7 @@ class _ViewBreedsState extends State<ViewBreeds> {
     final provider = context.watch<BreedProvider>();
     final textStyle = GoogleFonts.firaCode();
     final isChargeComplete = !provider.loading && provider.error == null;
+
     return Scaffold(
       body: Column(
         children: [
@@ -63,7 +81,7 @@ class _ViewBreedsState extends State<ViewBreeds> {
             ),
           ),
 
-          if (provider.loading)
+          if (provider.loading && provider.breeds.isEmpty)
             const Expanded(
               child: Center(child: CircularProgressIndicator()),
             ),
@@ -73,9 +91,7 @@ class _ViewBreedsState extends State<ViewBreeds> {
               child: Center(
                 child: Text(
                   "Error: ${provider.error}",
-                  style: textStyle.copyWith(
-                    color: Colors.red,
-                  ),
+                  style: textStyle.copyWith(color: Colors.red),
                 ),
               ),
             ),
@@ -83,16 +99,14 @@ class _ViewBreedsState extends State<ViewBreeds> {
           if (provider.breeds.isEmpty && isChargeComplete)
             Expanded(
               child: Center(
-                child: Text(
-                  "No breeds found.",
-                  style: textStyle,
-                ),
+                child: Text("No breeds found.", style: textStyle),
               ),
             ),
 
-          if (provider.breeds.isNotEmpty && isChargeComplete)
+          if (provider.breeds.isNotEmpty)
             Expanded(
               child: GridView.builder(
+                controller: _scrollController,
                 padding: const EdgeInsets.all(16),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
@@ -101,7 +115,11 @@ class _ViewBreedsState extends State<ViewBreeds> {
                   mainAxisSpacing: AppDimensions.kSpacing10,
                 ),
                 itemCount: provider.breeds.length,
+
                 itemBuilder: (context, index) {
+                  if (index == provider.breeds.length) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
                   final breed = provider.breeds[index];
                   return GestureDetector(
                     onTap: () => context.push(

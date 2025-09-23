@@ -10,9 +10,12 @@ class BreedDatasourceApidog implements BreedDatasource {
   BreedDatasourceApidog({required this.dioClient});
 
   @override
-  Future<Either<ErrorItem, dynamic>> getBreeds() async {
+  Future<Either<ErrorItem, dynamic>> getBreeds({
+    int page = 0,
+    int limit = 10,
+  }) async {
     try {
-      final response = await dioClient.get('v1/breeds?limit=10&page=0');
+      final response = await dioClient.get('v1/breeds?limit=$limit&page=$page');
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data;
 

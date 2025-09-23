@@ -11,9 +11,12 @@ class BreedRepositoryImpl implements BreedRepository {
   BreedRepositoryImpl(this.datasource);
 
   @override
-  Future<Either<ErrorItem, List<Breed>>> getBreeds() async {
+  Future<Either<ErrorItem, List<Breed>>> getBreeds({
+    int page = 0,
+    int limit = 10,
+  }) async {
     try {
-      final result = await datasource.getBreeds();
+      final result = await datasource.getBreeds(page: page, limit: limit);
       return result.fold(
         ifLeft: (error) => Either.left(error),
         ifRight: (data) {
