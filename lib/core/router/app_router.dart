@@ -14,6 +14,19 @@ class AppRouter {
           return const SplashScreen();
         },
       ),
+      GoRoute(
+        path: AppRouterConstants.homePath,
+        builder: (context, state) {
+          return const HomeScreen();
+        },
+      ),
+      GoRoute(
+        path: '${AppRouterConstants.detailsPath}/:id',
+        builder: (context, state) {
+          final breedId = state.pathParameters['id'];
+          return DetailsScreen(breedId: int.parse(breedId ?? '0'));
+        },
+      ),
     ],
   );
 }

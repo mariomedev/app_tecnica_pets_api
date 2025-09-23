@@ -14,3 +14,4 @@ export 'use_cases/get_favorite_breeds.dart';
 export 'use_cases/get_breed_detail.dart';
 export 'use_cases/search_breeds.dart';
 export 'use_cases/toggle_favorite_breed.dart';
+export 'use_cases/get_image_breed.dart';
