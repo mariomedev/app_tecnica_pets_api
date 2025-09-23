@@ -24,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen>
     );
     _animation = Tween<double>(begin: 0, end: 1).animate(_controller);
     _controller.forward().whenComplete(() {
-      context.go(AppRouterConstants.home);
+      context.go(AppRouterConstants.homePath);
     });
   }
 

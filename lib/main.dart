@@ -1,5 +1,5 @@
-import 'package:app_tecnica_pets_api/core/router/app_router.dart';
 import 'package:flutter/material.dart';
+import 'package:app_tecnica_pets_api/core/core.dart';
 
 void main() => runApp(const MyApp());
 
@@ -12,6 +12,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Prueba Técnica',
       routerConfig: AppRouter.routers,
+      theme: AppTheme.getTheme(),
     );
   }
 }
