@@ -26,41 +26,68 @@ class BreedProvider extends ChangeNotifier {
   Future<void> loadBreeds() async {
     _loading = true;
     notifyListeners();
+
     final result = await GetBreeds(repository)();
-    result.fold(
+    await result.fold(
       ifLeft: (value) {
         _error = '${value.message} de tipo ${value.code}';
       },
-      ifRight: (value) {
-        _breeds.clear();
-        _breeds.addAll(value);
+      ifRight: (value) async {
+        final newBreedsList = await Future.wait(
+          value.map((breed) async {
+            final imageUrl = await _fetchImageForBreed(breed.id);
+            return breed.copyWith(imageUrl: imageUrl);
+          }),
+        );
+        _breeds.addAll(newBreedsList);
         _error = null;
       },
     );
+
     _loading = false;
     notifyListeners();
   }
 
   Future<void> search(String query) async {
     if (query.isEmpty || query.length < 2) {
-      loadBreeds();
+      _breeds.clear();
+      await loadBreeds();
       return;
     }
+
     _loading = true;
     notifyListeners();
-    _breeds.clear();
+
     final result = await SearchBreeds(repository)(query);
-    result.fold(
+    await result.fold(
       ifLeft: (value) {
         _error = '${value.message} de tipo ${value.code}';
       },
-      ifRight: (value) {
-        _breeds.addAll(value);
+      ifRight: (value) async {
+        final newBreedsList = await Future.wait(
+          value.map((breed) async {
+            final imageUrl = await _fetchImageForBreed(breed.id);
+            return breed.copyWith(imageUrl: imageUrl);
+          }),
+        );
+        _breeds.clear();
+        _breeds.addAll(newBreedsList);
         _error = null;
       },
     );
+
     _loading = false;
     notifyListeners();
+  }
+
+  Future<String?> _fetchImageForBreed(int id) async {
+    final result = await GetImageBreed(repository)(id);
+    String? imageUrl;
+    result.fold(
+      ifLeft: (_) => null,
+      ifRight: (value) => imageUrl = value,
+    );
+    return imageUrl;
   }
 
   Future<void> loadFavorites() async {

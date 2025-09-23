@@ -1,3 +1,4 @@
+import 'package:app_tecnica_pets_api/domain/entites/image_breed.dart';
 import 'package:dart_either/dart_either.dart';
 
 import 'package:app_tecnica_pets_api/core/core.dart';
@@ -61,5 +62,21 @@ class BreedRepositoryImpl implements BreedRepository {
   Future<Either<ErrorItem, void>> toggleFavorite(Breed breed) {
     // TODO: implement toggleFavorite
     throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<ErrorItem, String>> getImageBreed(int id) async {
+    try {
+      final result = await datasource.getImageBreed(id);
+      return result.fold(
+        ifLeft: (error) => Either.left(error),
+        ifRight: (data) {
+          final image = ImageBreed.fromJson((data as List).first);
+          return Either.right(image.url);
+        },
+      );
+    } catch (e) {
+      return Either.left(ErrorItem(message: e.toString()));
+    }
   }
 }

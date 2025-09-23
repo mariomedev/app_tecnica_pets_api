@@ -15,10 +15,12 @@ class ViewBreeds extends StatefulWidget {
 
 class _ViewBreedsState extends State<ViewBreeds> {
   final _controller = TextEditingController();
+  final _debouncer = Debouncer(milliseconds: 500);
 
   @override
   void dispose() {
     _controller.dispose();
+    _debouncer.dispose();
     super.dispose();
   }
 
@@ -34,6 +36,7 @@ class _ViewBreedsState extends State<ViewBreeds> {
   Widget build(BuildContext context) {
     final provider = context.watch<BreedProvider>();
     final textStyle = GoogleFonts.firaCode();
+    final isChargeComplete = !provider.loading && provider.error == null;
     return Scaffold(
       body: Column(
         children: [
@@ -51,7 +54,11 @@ class _ViewBreedsState extends State<ViewBreeds> {
                 ),
                 filled: true,
               ),
-              onChanged: _onSearch,
+              onChanged: (value) {
+                _debouncer.run(() {
+                  _onSearch(value);
+                });
+              },
             ),
           ),
 
@@ -72,9 +79,7 @@ class _ViewBreedsState extends State<ViewBreeds> {
               ),
             ),
 
-          if (provider.breeds.isEmpty &&
-              !provider.loading &&
-              provider.error == null)
+          if (provider.breeds.isEmpty && isChargeComplete)
             Expanded(
               child: Center(
                 child: Text(
@@ -84,7 +89,7 @@ class _ViewBreedsState extends State<ViewBreeds> {
               ),
             ),
 
-          if (provider.breeds.isNotEmpty)
+          if (provider.breeds.isNotEmpty && isChargeComplete)
             Expanded(
               child: GridView.builder(
                 padding: const EdgeInsets.all(16),

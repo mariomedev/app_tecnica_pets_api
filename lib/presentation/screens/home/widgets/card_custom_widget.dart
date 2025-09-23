@@ -1,11 +1,19 @@
-import 'package:app_tecnica_pets_api/domain/domain.dart';
+import 'package:app_tecnica_pets_api/core/core.dart';
 import 'package:flutter/material.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 
-class CardCustomWidget extends StatelessWidget {
+import 'package:app_tecnica_pets_api/domain/domain.dart';
+
+class CardCustomWidget extends StatefulWidget {
   final Breed breed;
   const CardCustomWidget({super.key, required this.breed});
 
+  @override
+  State<CardCustomWidget> createState() => _CardCustomWidgetState();
+}
+
+class _CardCustomWidgetState extends State<CardCustomWidget> {
   @override
   Widget build(BuildContext context) {
     final textStyle = GoogleFonts.firaCode();
@@ -14,8 +22,18 @@ class CardCustomWidget extends StatelessWidget {
         Positioned.fill(
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.grey,
               borderRadius: BorderRadius.circular(20),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: FadeInImage(
+                placeholder: const AssetImage(AppAssets.loadingImage),
+                image: NetworkImage(
+                  widget.breed.imageUrl ??
+                      'https://via.placeholder.com/150?text=No+Image',
+                ),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ),
@@ -36,7 +54,7 @@ class CardCustomWidget extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      breed.name,
+                      widget.breed.name,
                       style: textStyle.copyWith(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -48,7 +66,7 @@ class CardCustomWidget extends StatelessWidget {
                   const SizedBox(height: 4),
                   Expanded(
                     child: Text(
-                      breed.breedGroup ?? 'No group',
+                      widget.breed.breedGroup ?? 'No group',
                       style: textStyle.copyWith(
                         fontSize: 14,
                         color: Colors.grey[800],
@@ -59,7 +77,7 @@ class CardCustomWidget extends StatelessWidget {
                   ),
                   Expanded(
                     child: Text(
-                      breed.lifeSpan,
+                      widget.breed.lifeSpan,
                       style: textStyle.copyWith(
                         fontSize: 14,
                         color: Colors.grey[800],
