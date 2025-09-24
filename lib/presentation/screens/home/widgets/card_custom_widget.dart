@@ -2,6 +2,8 @@ import 'package:app_tecnica_pets_api/core/core.dart';
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:app_tecnica_pets_api/presentation/providers/providers.dart';
 
 import 'package:app_tecnica_pets_api/domain/domain.dart';
 
@@ -14,6 +16,7 @@ class CardCustomWidget extends StatefulWidget {
 }
 
 class _CardCustomWidgetState extends State<CardCustomWidget> {
+  bool _favoriting = false;
   @override
   Widget build(BuildContext context) {
     final textStyle = GoogleFonts.firaCode();
@@ -26,14 +29,16 @@ class _CardCustomWidgetState extends State<CardCustomWidget> {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: FadeInImage(
-                placeholder: const AssetImage(AppAssets.loadingImage),
-                image: NetworkImage(
-                  widget.breed.imageUrl ??
-                      'https://via.placeholder.com/150?text=No+Image',
-                ),
-                fit: BoxFit.cover,
-              ),
+              child: widget.breed.imageUrl != null
+                  ? FadeInImage(
+                      placeholder: const AssetImage(AppAssets.loadingImage),
+                      image: NetworkImage(widget.breed.imageUrl!),
+                      fit: BoxFit.cover,
+                    )
+                  : Image.asset(
+                      AppAssets.logo,
+                      fit: BoxFit.cover,
+                    ),
             ),
           ),
         ),
@@ -89,6 +94,52 @@ class _CardCustomWidgetState extends State<CardCustomWidget> {
                 ],
               ),
             ),
+          ),
+        ),
+        Positioned(
+          top: 8,
+          right: 8,
+          child: Consumer<BreedFavoriteProvider>(
+            builder: (context, favProvider, _) {
+              final isFav = favProvider.favorites.any(
+                (b) => b.referenceImageId == widget.breed.referenceImageId,
+              );
+              return Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(24),
+                  onTap: (favProvider.loading || _favoriting)
+                      ? null
+                      : () async {
+                          if (_favoriting) return;
+                          setState(() {
+                            _favoriting = true;
+                          });
+                          try {
+                            await favProvider.toggleFavorite(widget.breed);
+                          } finally {
+                            if (!mounted) return;
+                            setState(() {
+                              _favoriting = false;
+                            });
+                          }
+                        },
+                  child: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    child: _favoriting
+                        ? const SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : Icon(
+                            isFav ? Icons.favorite : Icons.favorite_border,
+                            color: isFav ? Colors.red : Colors.grey[800],
+                          ),
+                  ),
+                ),
+              );
+            },
           ),
         ),
       ],

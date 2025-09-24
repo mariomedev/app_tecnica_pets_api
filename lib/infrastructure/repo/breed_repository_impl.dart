@@ -1,4 +1,3 @@
-import 'package:app_tecnica_pets_api/domain/entites/image_breed.dart';
 import 'package:dart_either/dart_either.dart';
 
 import 'package:app_tecnica_pets_api/core/core.dart';
@@ -63,18 +62,6 @@ class BreedRepositoryImpl implements BreedRepository {
     } catch (e) {
       return Either.left(ErrorItem(message: e.toString()));
     }
-  }
-
-  @override
-  Future<Either<ErrorItem, List<Breed>>> getFavoriteBreeds() {
-    // TODO: implement getFavoriteBreeds
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<ErrorItem, void>> toggleFavorite(Breed breed) {
-    // TODO: implement toggleFavorite
-    throw UnimplementedError();
   }
 
   @override
