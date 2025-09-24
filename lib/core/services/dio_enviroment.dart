@@ -14,8 +14,8 @@ final class DioEnviroment {
       BaseOptions(
         baseUrl: baseUrl,
         headers: {
-          'Authorization': 'Bearer $apiKey',
-          'Content-type': 'application/graphql',
+          'x-api-key': apiKey,
+          'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
       ),

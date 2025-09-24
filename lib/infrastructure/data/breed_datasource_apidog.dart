@@ -75,18 +75,6 @@ class BreedDatasourceApidog implements BreedDatasource {
   }
 
   @override
-  Future<Either<ErrorItem, dynamic>> getFavoriteBreeds() {
-    // TODO: implement getFavoriteBreeds
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<ErrorItem, dynamic>> toggleFavorite(Breed breed) {
-    // TODO: implement toggleFavorite
-    throw UnimplementedError();
-  }
-
-  @override
   Future<Either<ErrorItem, dynamic>> getImageBreed(int id) async {
     try {
       final response = await dioClient.get('v1/images/search?breed_ids=$id');

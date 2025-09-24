@@ -17,9 +17,6 @@ class BreedProvider extends ChangeNotifier {
   final List<Breed> _breeds = [];
   List<Breed> get breeds => _breeds;
 
-  final List<Breed> _favorites = [];
-  List<Breed> get favorites => _favorites;
-
   Breed? _selectedBreed;
   Breed? get selectedBreed => _selectedBreed;
 
