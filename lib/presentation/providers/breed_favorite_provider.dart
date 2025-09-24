@@ -4,7 +4,9 @@ import 'package:app_tecnica_pets_api/domain/domain.dart';
 class BreedFavoriteProvider extends ChangeNotifier {
   final BreedFavoriteRepository repository;
 
-  BreedFavoriteProvider({required this.repository});
+  BreedFavoriteProvider({required this.repository}) {
+    loadFavorites();
+  }
 
   bool _loading = false;
   bool get loading => _loading;
@@ -39,7 +41,16 @@ class BreedFavoriteProvider extends ChangeNotifier {
   Future<void> toggleFavorite(Breed breed) async {
     _loading = true;
     notifyListeners();
-
+    final result = await ToggleFavoriteBreed(repository)(breed);
+    result.fold(
+      ifLeft: (value) {
+        _error = '${value.message} de tipo ${value.code}';
+      },
+      ifRight: (_) async {
+        _error = null;
+        await loadFavorites();
+      },
+    );
     _loading = false;
     notifyListeners();
   }

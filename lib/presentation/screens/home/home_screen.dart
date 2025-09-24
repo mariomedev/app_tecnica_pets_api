@@ -1,8 +1,11 @@
+import 'package:app_tecnica_pets_api/presentation/screens/home/breeds/view_favorites_breeds.dart';
 import 'package:flutter/material.dart';
 
-import 'widgets/widgets.dart';
 import 'package:app_tecnica_pets_api/core/core.dart';
 import 'package:app_tecnica_pets_api/presentation/screens/home/breeds/view_breeds.dart';
+import 'package:app_tecnica_pets_api/presentation/screens/home/widgets/widgets.dart';
+import 'package:provider/provider.dart';
+import 'package:app_tecnica_pets_api/presentation/providers/providers.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -21,8 +24,13 @@ class HomeScreen extends StatelessWidget {
           child: TabBarView(
             children: [
               const ViewBreeds(),
-              Container(
-                color: Colors.transparent,
+              Builder(
+                builder: (context) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    context.read<BreedFavoriteProvider>().loadFavorites();
+                  });
+                  return const ViewFavorites();
+                },
               ),
             ],
           ),
